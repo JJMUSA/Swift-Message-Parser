@@ -106,7 +106,11 @@ if __name__ == "__main__":
     print(missing_files)
     for file in missing_files:
         if file.endswith('.pdf'):
-            data = get_readable_summary(f"./Inputfiles/{file}")
-            generate_html(data, file)
+            try:
+                data = get_readable_summary(f"./Inputfiles/{file}")
+                generate_html(data, file)
+            except:
+                print(f"Error processing file: {file}")
+                continue
     # tags, full_text = extract_tags_from_pdf(test_file)
     # print(tags)
