@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EBID - SWIFT MX Transfer Advice</title>
+    <style>
+        /* Professional Gothic Font Stack for WeasyPrint compatibility */
+        @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap');
+
+        :root {
+            --ebid-green: #008751;
+            --ebid-maroon: #8B0000;
+            --slate-text: #1e293b;
+            --slate-label: #64748b;
+            --bg-light: #f8fafc;
+        }
+
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+
+        body {
+            font-family: 'League Spartan', 'Century Gothic', sans-serif;
+            background-color: white;
+            color: var(--slate-text);
+            line-height: 1.4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 100%;
+        }
+
+        /* Branding Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40pt;
+        }
+
+        .logo-placeholder {
+            width: 70pt;
+            height: 70pt;
+            border-radius: 50%;
+            border: 2pt solid var(--ebid-green);
+            margin: 0 auto 15pt;
+            display: block;
+            line-height: 70pt;
+            font-weight: bold;
+            color: var(--ebid-green);
+            font-size: 14pt;
+        }
+
+        .title {
+            color: var(--ebid-green);
+            font-size: 22pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin: 0;
+            letter-spacing: -0.5pt;
+        }
+
+        .gen-date {
+            color: var(--slate-label);
+            font-size: 10pt;
+            margin-top: 5pt;
+            font-weight: 500;
+        }
+
+        /* Metadata Section */
+        .section-header {
+            color: var(--ebid-maroon);
+            font-size: 10pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1pt;
+            border-bottom: 1.5pt solid #f1f5f9;
+            padding-bottom: 6pt;
+            margin-bottom: 15pt;
+        }
+
+        .meta-box {
+            background-color: #ffffff;
+            border: 1pt solid #e2e8f0;
+            border-radius: 8pt;
+            padding: 15pt;
+            margin-bottom: 30pt;
+        }
+
+        .grid {
+            display: table;
+            width: 100%;
+        }
+
+        .grid-col {
+            display: table-cell;
+            vertical-align: top;
+            width: 50%;
+        }
+
+        .label {
+            font-size: 7pt;
+            text-transform: uppercase;
+            color: var(--slate-label);
+            font-weight: 700;
+            margin-bottom: 3pt;
+        }
+
+        .value {
+            font-size: 11pt;
+            font-weight: 600;
+        }
+
+        .value-mono {
+            font-family: 'Courier New', monospace;
+            color: var(--ebid-green);
+            font-size: 12pt;
+        }
+
+        /* Transaction Cards */
+        .transaction-card {
+            border: 1pt solid #e2e8f0;
+            border-top: 5pt solid var(--ebid-green);
+            border-radius: 8pt;
+            margin-bottom: 25pt;
+            page-break-inside: avoid;
+        }
+
+        .card-header {
+            background-color: var(--ebid-green);
+            color: white;
+            padding: 6pt 15pt;
+            font-size: 8pt;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .card-body {
+            padding: 15pt;
+        }
+
+        .amount-section {
+            width: 35%;
+            border-right: 1pt solid #f1f5f9;
+            padding-right: 15pt;
+        }
+
+        .parties-section {
+            width: 65%;
+            padding-left: 15pt;
+        }
+
+        .amount-text {
+            font-size: 24pt;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .currency-text {
+            color: var(--ebid-green);
+            font-size: 14pt;
+            font-weight: 700;
+        }
+
+        .iban-box {
+            background-color: #f1f5f9;
+            padding: 6pt 10pt;
+            border-radius: 4pt;
+            margin-top: 5pt;
+            display: inline-block;
+        }
+
+        .iban-label {
+            background-color: var(--ebid-green);
+            color: white;
+            font-size: 6pt;
+            padding: 2pt 4pt;
+            border-radius: 2pt;
+            font-weight: 800;
+            margin-right: 5pt;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-placeholder">EBID</div>
+            <h1 class="title">Transfer Advice Summary</h1>
+            <p class="gen-date">Report Generated: {{ GenerationDate }}</p>
+        </div>
+
+        <div class="section-header">Message Identification</div>
+        <div class="meta-box">
+            <div class="grid">
+                <div class="grid-col">
+                    <div class="label">MsgId Reference</div>
+                    <div class="value-mono">{{ MessageID }}</div>
+                </div>
+                <div class="grid-col" style="text-align: right;">
+                    <div class="label">Creation Timestamp</div>
+                    <div class="value">{{ CreationTimestamp }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-header">Processed Transactions</div>
+
+        {% for tx in Transactions %}
+        <div class="transaction-card">
+            <div class="card-header">
+                <div class="grid">
+                    <div class="grid-col">Ref #{{ loop.index }}</div>
+                    <div class="grid-col" style="text-align: right;">UETR: {{ tx.UETR | default('N/A') }}</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="grid">
+                    <div class="grid-col amount-section">
+                        <div class="label">Settlement Amount</div>
+                        <div style="margin-top: 5pt;">
+                            <span class="amount-text">{{"{:,.2f}".format(tx.Amount |float )}}</span>
+                            <span class="currency-text">{{ tx.Currency }}</span>
+                        </div>
+                    </div>
+                    <div class="grid-col parties-section">
+                        <div class="grid">
+                            <div class="grid-col">
+                                <div class="label">Ordering Party</div>
+                                <div class="value">{{ tx.SenderName | default('N/A') }}</div>
+                            </div>
+                            <div class="grid-col">
+                                <div class="label">Beneficiary</div>
+                                <div class="value">{{ tx.ReceiverName | default('N/A') }}</div>
+                                <div class="iban-box">
+                                    <span class="iban-label">IBAN</span>
+                                    <span class="mono-value" style="font-size: 9pt;">{{ tx.IBAN | default('N/A') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
