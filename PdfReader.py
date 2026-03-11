@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import os
 
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/OutgoingC:\Dixio/SyncAppProd/folders/reception/LTA\OutgoingC:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
