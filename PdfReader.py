@@ -1,0 +1,112 @@
+import fitz
+import re
+from jinja2 import Template, FileSystemLoader, Environment
+from datetime import datetime
+from weasyprint import HTML
+from bs4 import BeautifulSoup
+import os
+
+env = Environment(loader=FileSystemLoader('.'))
+
+
+def get_readable_summary(pdf_path):
+    # Initialize the data structure to hold our results
+    extracted_data = {
+        "header": {},
+        "transactions": [],
+        "metadata": {"file_path": pdf_path, "status": "success"}
+    }
+
+    try:
+        doc = fitz.open(pdf_path)
+        raw_text = ""
+        for page in doc:
+            # Preserve whitespace to avoid words sticking together
+            raw_text += page.get_text("text", flags=fitz.TEXT_PRESERVE_WHITESPACE)
+    except Exception as e:
+        return {"header": {}, "transactions": [], "metadata": {"file_path": pdf_path, "status": "error", "message": str(e)}}
+
+    # 1. Pre-process the text
+    # Remove excessive newlines but keep the tag structure intact
+    clean_text = re.sub(r'\s+', ' ', raw_text)
+
+    # 2. Extract specific patterns (Key-Value pairs)
+    # Since the document isn't pure XML, we look for the tags directly in the text stream
+    def find_tag_content(tag_name, text):
+        # This regex looks for <TagName>Value</TagName> or <TagName ...>Value</TagName>
+        pattern = rf'<{tag_name}[^>]*>(.*?)</{tag_name}>'
+        match = re.search(pattern, text, re.IGNORECASE)
+        return match.group(1).strip() if match else None
+
+    def find_attribute(tag_name, attr_name, text):
+        # Specifically for things like <IntrBkSttlmAmt Ccy="USD">
+        pattern = rf'<{tag_name}[^>]*{attr_name}="([^"]*)"'
+        match = re.search(pattern, text, re.IGNORECASE)
+        return match.group(1) if match else None
+
+    # 3. Extract Global Header Info (MsgId and CreDtTm)
+    msg_id = find_tag_content('MsgId', clean_text)
+    creation_date = find_tag_content('CreDtTm', clean_text) or find_tag_content('CreDt', clean_text)
+
+    extracted_data["header"] = {
+        "message_id": msg_id,
+        "creation_date": creation_date
+    }
+
+    # 4. Identify Transaction Blocks
+    tx_blocks = re.findall(r'<CdtTrfTxInf[^>]*>(.*?)</CdtTrfTxInf>', clean_text, re.IGNORECASE)
+
+    for i, block in enumerate(tx_blocks, 1):
+        # Extract individual fields from the block
+        uetr = find_tag_content('UETR', block)
+        amt = find_tag_content('IntrBkSttlmAmt', block)
+        ccy = find_attribute('IntrBkSttlmAmt', 'Ccy', block)
+
+        # Sender (Debtor) - Look for Nm inside Dbtr block
+        dbtr_match = re.search(r'<Dbtr[^>]*>(.*?)</Dbtr>', block, re.IGNORECASE)
+        dbtr_name = find_tag_content('Nm', dbtr_match.group(1)) if dbtr_match else None
+
+        # Receiver (Creditor) - Look for Nm inside Cdtr block
+        cdtr_match = re.search(r'<Cdtr[^>]*>(.*?)</Cdtr>', block, re.IGNORECASE)
+        cdtr_name = find_tag_content('Nm', cdtr_match.group(1)) if cdtr_match else None
+
+        # Account Info
+        iban = find_tag_content('IBAN', block)
+
+        # Append structured transaction data
+        extracted_data["transactions"].append({
+            "transaction_index": i,
+            "UETR": uetr,
+            "Amount": amt,
+            "Currency": ccy,
+            "SenderName": dbtr_name,
+            "ReceiverName": cdtr_name,
+            "IBAN": iban
+        })
+
+    return extracted_data
+
+
+def generate_html(mx_data, file):
+
+    template = env.get_template("template.html")
+    context = {'MessageID': mx_data['header']['message_id'],
+               'CreationTimestamp': mx_data['header']['creation_date'],
+               'Transactions': mx_data.get('transactions', []),
+               'GenerationDate': datetime.now().strftime("%Y-%m-%d %H:%M:")}
+    html =  template.render(context)
+    HTML(string=html, base_url= '.').write_pdf(f"./Outputfile/{file}")
+    # template.render(context)
+
+
+if __name__ == "__main__":
+    inputfiles = os.listdir("./Inputfiles")
+    outputfiles = os.listdir("./Outputfile")
+    missing_files = set(inputfiles) - set(outputfiles)
+    print(missing_files)
+    for file in missing_files:
+        if file.endswith('.pdf'):
+            data = get_readable_summary(f"./Inputfiles/{file}")
+            generate_html(data, file)
+    # tags, full_text = extract_tags_from_pdf(test_file)
+    # print(tags)
