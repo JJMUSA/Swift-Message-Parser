@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 import os
 
 env = Environment(loader=FileSystemLoader('.'))
-
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/OutgoingC:\Dixio/SyncAppProd/folders/reception/LTA\OutgoingC:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
@@ -95,13 +95,13 @@ def generate_html(mx_data, file):
                'Transactions': mx_data.get('transactions', []),
                'GenerationDate': datetime.now().strftime("%Y-%m-%d %H:%M:")}
     html =  template.render(context)
-    HTML(string=html, base_url= '.').write_pdf(f"./Outputfile/{file}")
+    HTML(string=html, base_url= '.').write_pdf(f"./Outputfiles/{file}")
     # template.render(context)
 
 
 if __name__ == "__main__":
-    inputfiles = os.listdir("./Inputfiles")
-    outputfiles = os.listdir("./Outputfile")
+    inputfiles = os.listdir(input_path)
+    outputfiles = os.listdir("./Outputfiles")
     missing_files = set(inputfiles) - set(outputfiles)
     print(missing_files)
     for file in missing_files:
