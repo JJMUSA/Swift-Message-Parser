@@ -6,7 +6,7 @@ from weasyprint import HTML
 from mail import send_email
 from bs4 import BeautifulSoup
 import os
-from APScheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 env = Environment(loader=FileSystemLoader('.'))
 input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 # input_path = "./Inputfiles"
