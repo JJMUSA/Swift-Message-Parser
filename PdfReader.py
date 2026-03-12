@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 import os
 
 env = Environment(loader=FileSystemLoader('.'))
-# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-input_path = "./Inputfiles"
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+# input_path = "./Inputfiles"
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
     extracted_data = {
@@ -143,7 +143,7 @@ def send_new_message(attachements):
         'jmusa@bidc-ebid.org'
     ],
         subject="New LTA Message Received",
-        body= Template(email_html).render(),
+        body=Template(email_html).render(),
         attachments=attachements,
         inline_images=[
             "./static/images/image001.jpg",
