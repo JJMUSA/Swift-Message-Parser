@@ -162,7 +162,7 @@ if __name__ == "__main__":
     inputfiles = os.listdir(input_path)
     outputfiles = os.listdir("./Outputfiles")
     missing_files = set(inputfiles) - set(outputfiles)
-    print(missing_files)
+    # print(missing_files)
     new_files = []
     for file in missing_files:
         if file.endswith('.pdf'):

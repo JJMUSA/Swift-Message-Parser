@@ -21,7 +21,7 @@ def send_email(subject, body, recipients, attachments=None, inline_images=None,
     msg.attach(MIMEText(body, 'html'))
     if attachments:
         for attachment in attachments:
-            with open(attachment, "rb") as f:
+            with open(f'./Outputfiles/{attachment}', "rb") as f:
                 part = MIMEApplication(f.read(), Name=attachment)
             part['Content-Disposition'] = f'attachment; filename="{attachment}"'
             msg.attach(part)
