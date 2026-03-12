@@ -142,6 +142,7 @@ def send_new_message(attachements):
     send_email(recipients=[
         'jmusa@bidc-ebid.org'
     ],
+        cc=[],
         subject="New LTA Message Received",
         body=Template(email_html).render(),
         attachments=attachements,
