@@ -8,7 +8,7 @@ import os
 
 env = Environment(loader=FileSystemLoader('.'))
 input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-
+# input_path = "./Inputfiles"
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
     extracted_data = {
@@ -87,6 +87,42 @@ def get_readable_summary(pdf_path):
     return extracted_data
 
 
+def identify_swift_type(pdf_path):
+    try:
+        doc = fitz.open(pdf_path)
+        header_text = ""
+        for i in range(min(2, len(doc))):
+            header_text += doc[i].get_text("text")
+
+
+        mx_indicators = [
+            'urn:iso:std:iso:20022',
+            '<AppHdr',
+            '<Document',
+            'pacs.008',
+            'pain.001'
+        ]
+
+
+        mt_indicators = [
+            '{1:F01',
+            '{4:',
+            ':20:',
+            ':32A:',
+            'SWIFT MT'
+        ]
+
+        if any(ind in header_text for ind in mx_indicators):
+            return "MX"
+        elif any(ind in header_text for ind in mt_indicators):
+            return "MT"
+
+        return "UNKNOWN"
+    except Exception as e:
+        print(f"Error identifying {pdf_path}: {e}")
+        return "ERROR"
+
+
 def generate_html(mx_data, file):
 
     template = env.get_template("template.html")
@@ -106,11 +142,10 @@ if __name__ == "__main__":
     print(missing_files)
     for file in missing_files:
         if file.endswith('.pdf'):
-            try:
+            if identify_swift_type(f"./Inputfiles/{file}") == "MX":
                 data = get_readable_summary(f"./Inputfiles/{file}")
                 generate_html(data, file)
-            except:
-                print(f"Error processing file: {file}")
-                continue
+            else:
+                pass
     # tags, full_text = extract_tags_from_pdf(test_file)
     # print(tags)
