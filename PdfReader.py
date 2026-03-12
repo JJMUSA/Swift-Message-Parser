@@ -3,12 +3,13 @@ import re
 from jinja2 import Template, FileSystemLoader, Environment
 from datetime import datetime
 from weasyprint import HTML
+from mail import send_email
 from bs4 import BeautifulSoup
 import os
 
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-# input_path = "./Inputfiles"
+# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+input_path = "./Inputfiles"
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
     extracted_data = {
@@ -132,20 +133,45 @@ def generate_html(mx_data, file):
                'GenerationDate': datetime.now().strftime("%Y-%m-%d %H:%M:")}
     html =  template.render(context)
     HTML(string=html, base_url= '.').write_pdf(f"./Outputfiles/{file}")
+    return f"./Outputfiles/{file}"
     # template.render(context)
 
+def send_new_message(attachements):
+    with open('./email_template.html', 'r', encoding='latin1') as f:
+        email_html = f.read()
+    send_email(recipients=[
+        'jmusa@bidc-ebid.org'
+    ],
+        subject="New LTA Message Received",
+        body= Template(email_html).render(),
+        attachments=attachements,
+        inline_images=[
+            "./static/images/image001.jpg",
+            "./static/images/image003.gif",
+            "./static/images/image005.jpg",
+            "./static/images/image007.jpg",
+            "./static/images/image009.jpg",
+            "./static/images/image011.jpg",
+            "./static/images/image013.jpg",
+        ],
+
+    )
 
 if __name__ == "__main__":
     inputfiles = os.listdir(input_path)
     outputfiles = os.listdir("./Outputfiles")
     missing_files = set(inputfiles) - set(outputfiles)
     print(missing_files)
+    new_files = []
     for file in missing_files:
         if file.endswith('.pdf'):
             if identify_swift_type(f"{input_path}/{file}") == "MX":
                 data = get_readable_summary(f"{input_path}/{file}")
-                generate_html(data, file)
+                file_name = generate_html(data, file)
+                new_files.append(file_name)
             else:
                 pass
+    if missing_files:
+        send_new_message(new_files)
     # tags, full_text = extract_tags_from_pdf(test_file)
     # print(tags)
