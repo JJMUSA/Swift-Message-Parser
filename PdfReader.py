@@ -142,8 +142,8 @@ if __name__ == "__main__":
     print(missing_files)
     for file in missing_files:
         if file.endswith('.pdf'):
-            if identify_swift_type(f"./Inputfiles/{file}") == "MX":
-                data = get_readable_summary(f"./Inputfiles/{file}")
+            if identify_swift_type(f"{input_path}/{file}") == "MX":
+                data = get_readable_summary(f"{input_path}/{file}")
                 generate_html(data, file)
             else:
                 pass
