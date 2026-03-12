@@ -133,7 +133,7 @@ def generate_html(mx_data, file):
                'GenerationDate': datetime.now().strftime("%Y-%m-%d %H:%M:")}
     html =  template.render(context)
     HTML(string=html, base_url= '.').write_pdf(f"./Outputfiles/{file}")
-    return f"./Outputfiles/{file}"
+    return file
     # template.render(context)
 
 def send_new_message(attachements):
