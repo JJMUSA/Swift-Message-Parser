@@ -6,7 +6,7 @@ from weasyprint import HTML
 from mail import send_email
 from bs4 import BeautifulSoup
 import os
-
+from APScheduler.schedulers.background import BackgroundScheduler
 env = Environment(loader=FileSystemLoader('.'))
 input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 # input_path = "./Inputfiles"
@@ -136,29 +136,7 @@ def generate_html(mx_data, file):
     return file
     # template.render(context)
 
-def send_new_message(attachements):
-    with open('./email_template.html', 'r', encoding='latin1') as f:
-        email_html = f.read()
-    send_email(recipients=[
-        'jmusa@bidc-ebid.org'
-    ],
-        cc=[],
-        subject="New LTA Message Received",
-        body=Template(email_html).render(),
-        attachments=attachements,
-        inline_images=[
-            "./static/images/image001.jpg",
-            "./static/images/image003.gif",
-            "./static/images/image005.jpg",
-            "./static/images/image007.jpg",
-            "./static/images/image009.jpg",
-            "./static/images/image011.jpg",
-            "./static/images/image013.jpg",
-        ],
-
-    )
-
-if __name__ == "__main__":
+def send_new_message():
     inputfiles = os.listdir(input_path)
     outputfiles = os.listdir("./Outputfiles")
     missing_files = set(inputfiles) - set(outputfiles)
@@ -173,7 +151,39 @@ if __name__ == "__main__":
                 new_files.append(file_name)
             else:
                 pass
-    if len(new_files)>0:
-        send_new_message(new_files)
-    # tags, full_text = extract_tags_from_pdf(test_file)
-    # print(tags)
+    if len(new_files) > 0:
+        # send_new_message(new_files)
+        with open('./email_template.html', 'r', encoding='latin1') as f:
+            email_html = f.read()
+        send_email(recipients=[
+            'jmusa@bidc-ebid.org',
+            'emojie@bidc-ebid.org',
+            'forimoloye@bidc-ebid.org'
+        ],
+            cc=[],
+            subject="New LTA Message Received",
+            body=Template(email_html).render(),
+            attachments=new_files,
+            inline_images=[
+                "./static/images/image001.jpg",
+                "./static/images/image003.gif",
+                "./static/images/image005.jpg",
+                "./static/images/image007.jpg",
+                "./static/images/image009.jpg",
+                "./static/images/image011.jpg",
+                "./static/images/image013.jpg",
+            ],
+
+        )
+
+if __name__ == "__main__":
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(send_new_message, 'interval', minutes=1)
+    scheduler.start()
+
+    try:
+        while True:
+            pass
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
+
