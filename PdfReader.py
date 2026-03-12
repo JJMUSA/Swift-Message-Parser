@@ -169,10 +169,11 @@ if __name__ == "__main__":
             if identify_swift_type(f"{input_path}/{file}") == "MX":
                 data = get_readable_summary(f"{input_path}/{file}")
                 file_name = generate_html(data, file)
+                print(file_name)
                 new_files.append(file_name)
             else:
                 pass
-    if missing_files:
+    if len(new_files)>0:
         send_new_message(new_files)
     # tags, full_text = extract_tags_from_pdf(test_file)
     # print(tags)
