@@ -30,6 +30,7 @@ def get_readable_summary(pdf_path):
     # 1. Pre-process the text
     # Remove excessive newlines but keep the tag structure intact
     clean_text = re.sub(r'\s+', ' ', raw_text)
+    message_ref = raw_text[398:438]
 
     # 2. Extract specific patterns (Key-Value pairs)
     # Since the document isn't pure XML, we look for the tags directly in the text stream
@@ -50,9 +51,10 @@ def get_readable_summary(pdf_path):
 
     extracted_data["header"] = {
         "message_id": msg_id,
+        "messageRef": message_ref,
         "creation_date": datetime.fromisoformat(creation_date).strftime(("%d %b %Y, %I:%M %p"))
     }
-
+    # print(extracted_data)
     # 4. Identify Transaction Blocks
     tx_blocks = re.findall(r'<CdtTrfTxInf[^>]*>(.*?)</CdtTrfTxInf>', clean_text, re.IGNORECASE)
 
@@ -90,9 +92,10 @@ def get_readable_summary(pdf_path):
             "ReceiverName": cdtr_name,
             "IBAN": iban,
             "Reference": ref,
-            'FINInstnId': bicifi_match
-        })
+            'FINInstnId': bicifi_match,
 
+        })
+    print(extracted_data)
     return extracted_data
 
 
@@ -138,11 +141,14 @@ def generate_html(mx_data, file):
     context = {'MessageID': mx_data['header']['message_id'],
                'CreationTimestamp': mx_data['header']['creation_date'],
                'Transactions': mx_data.get('transactions', []),
+               'MessageRef': mx_data['header']['messageRef'],
                'GenerationDate': datetime.now().strftime(("%d %b %Y, %I:%M %p"))}
-    html =  template.render(context)
+
+    html = template.render(context)
     HTML(string=html, base_url= '.').write_pdf(f"./Outputfiles/{file}")
     return file
     # template.render(context)
+
 
 def send_new_message():
     inputfiles = os.listdir(input_path)
@@ -165,8 +171,8 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
-            # 'emojie@bidc-ebid.org',
-            # 'forimoloye@bidc-ebid.org'
+            'emojie@bidc-ebid.org',
+            'forimoloye@bidc-ebid.org'
         ],
             cc=[],
             subject="New LTA Message Received",
@@ -183,9 +189,9 @@ def send_new_message():
             ],
 
         )
-# send_new_message()
+
+
 if __name__ == "__main__":
-    pass
     scheduler = BackgroundScheduler()
     scheduler.add_job(send_new_message, 'interval', minutes=5)
     scheduler.start()
