@@ -8,8 +8,8 @@ from bs4 import BeautifulSoup
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 env = Environment(loader=FileSystemLoader('.'))
-# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-input_path = "./Inputfiles"
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+# input_path = "./Inputfiles"
 def get_readable_summary(pdf_path):
     # Initialize the data structure to hold our results
     extracted_data = {
