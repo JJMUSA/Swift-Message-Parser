@@ -159,40 +159,40 @@ def send_new_message():
                 new_files.append(file_name)
             else:
                 pass
-    # if len(new_files) > 0:
-    #     # send_new_message(new_files)
-    #     with open('./email_template.html', 'r', encoding='latin1') as f:
-    #         email_html = f.read()
-    #     send_email(recipients=[
-    #         'jmusa@bidc-ebid.org',
-    #         # 'emojie@bidc-ebid.org',
-    #         # 'forimoloye@bidc-ebid.org'
-    #     ],
-    #         cc=[],
-    #         subject="New LTA Message Received",
-    #         body=Template(email_html).render(),
-    #         attachments=new_files,
-    #         inline_images=[
-    #             "./static/images/image001.jpg",
-    #             "./static/images/image003.gif",
-    #             "./static/images/image005.jpg",
-    #             "./static/images/image007.jpg",
-    #             "./static/images/image009.jpg",
-    #             "./static/images/image011.jpg",
-    #             "./static/images/image013.jpg",
-    #         ],
-    #
-    #     )
-send_new_message()
+    if len(new_files) > 0:
+        # send_new_message(new_files)
+        with open('./email_template.html', 'r', encoding='latin1') as f:
+            email_html = f.read()
+        send_email(recipients=[
+            'jmusa@bidc-ebid.org',
+            # 'emojie@bidc-ebid.org',
+            # 'forimoloye@bidc-ebid.org'
+        ],
+            cc=[],
+            subject="New LTA Message Received",
+            body=Template(email_html).render(),
+            attachments=new_files,
+            inline_images=[
+                "./static/images/image001.jpg",
+                "./static/images/image003.gif",
+                "./static/images/image005.jpg",
+                "./static/images/image007.jpg",
+                "./static/images/image009.jpg",
+                "./static/images/image011.jpg",
+                "./static/images/image013.jpg",
+            ],
+
+        )
+# send_new_message()
 if __name__ == "__main__":
     pass
-    # scheduler = BackgroundScheduler()
-    # scheduler.add_job(send_new_message, 'interval', minutes=30)
-    # scheduler.start()
-    #
-    # try:
-    #     while True:
-    #         pass
-    # except (KeyboardInterrupt, SystemExit):
-    #     scheduler.shutdown()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(send_new_message, 'interval', minutes=30)
+    scheduler.start()
+
+    try:
+        while True:
+            pass
+    except (KeyboardInterrupt, SystemExit):
+        scheduler.shutdown()
 
