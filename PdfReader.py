@@ -95,7 +95,6 @@ def get_readable_summary(pdf_path):
             'FINInstnId': bicifi_match,
 
         })
-    print(extracted_data)
     return extracted_data
 
 
@@ -171,7 +170,10 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
-            'emojie@bidc-ebid.org',
+            'EOMIJIE@bidc-ebid.org',
+            'aouattara@bidc-ebid.org',
+            'YDETE@bidc-ebid.org',
+            'AAMANKWAH@bidc-ebid.org'
             'forimoloye@bidc-ebid.org'
         ],
             cc=[],
