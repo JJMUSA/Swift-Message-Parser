@@ -199,7 +199,7 @@ def send_new_message():
             'EOMIJIE@bidc-ebid.org',
             'aouattara@bidc-ebid.org',
             'YDETE@bidc-ebid.org',
-            'AAMANKWAH@bidc-ebid.org'
+            'AAMANKWAH@bidc-ebid.org',
             'forimoloye@bidc-ebid.org'
         ],
             cc=[],
