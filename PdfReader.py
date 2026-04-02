@@ -218,7 +218,7 @@ def send_new_message():
 
         )
 
-send_new_message()
+
 if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     scheduler.add_job(send_new_message, 'interval', minutes=5)
