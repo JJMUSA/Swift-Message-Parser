@@ -38,7 +38,26 @@
             text-align: center;
             margin-bottom: 30pt;
         }
-
+        .header img {
+           height: 80pt; /* Adjusted for prominent centered presence */
+            width: auto;
+            display: inline-block;
+            margin: 0 auto;
+            /*top:0;*/
+            /*left:0;*/
+/*<!--            margin-top: 0;-->*/
+/*<!--            text-align:left-->*/
+        }
+        .header logo-img {
+            /*height: 100pt; !* Fixed height for consistency *!*/
+            /*width: auto;  !* Proportional width *!*/
+            /*display: block;*/
+            /*margin: 0 auto;*/
+            height: 80pt; /* Adjusted for prominent centered presence */
+            width: auto;
+            display: inline-block;
+            margin: 0 auto;
+        }
         .logo-placeholder {
             width: 65pt;
             height: 65pt;
@@ -175,20 +194,32 @@
 
         .iban-box {
             background-color: #f1f5f9;
-            padding: 4pt 8pt;
-            border-radius: 4pt;
-            margin-top: 8pt;
+            padding: 8pt 12pt;
+            border-radius: 6pt;
+            margin-top: 12pt;
             display: block;
+            width: auto; /* Respects column padding */
+            border-left: 3pt solid var(--ebid-green);
         }
 
         .iban-label {
             background-color: var(--ebid-green);
             color: white;
-            font-size: 5.5pt;
-            padding: 1.5pt 3pt;
-            border-radius: 2pt;
+            font-size: 6.5pt;
+            padding: 2pt 5pt;
+            border-radius: 3pt;
             font-weight: 800;
-            margin-right: 4pt;
+            margin-right: 8pt;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+        .iban-text {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            color: var(--slate-text);
+            letter-spacing: 0.5pt;
+            word-break: break-all;
+            font-weight: 600;
             vertical-align: middle;
         }
     </style>
@@ -196,7 +227,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="logo-placeholder">EBID</div>
+            <img src="./static/images/Badge.png" alt="Organization Logo">
+<!--            <div class="logo-placeholder">EBID</div>-->
             <h1 class="title">Transfer Advice Summary</h1>
             <p class="gen-date">Report Generated: {{ GenerationDate }}</p>
         </div>
@@ -263,8 +295,8 @@
                         </div>
 
                         <div class="iban-box">
-                            <span class="iban-label">IBAN</span>
-                            <span class="value-mono" style="font-size: 8.5pt; color: var(--slate-text);">{{ tx.IBAN | default('N/A') }}</span>
+                            <span class="iban-label">Beneficiary Account Number:</span>
+                            <span class="iban-text">{{ tx.IBAN | default('N/A') }}</span>
                         </div>
                     </div>
                 </div>
