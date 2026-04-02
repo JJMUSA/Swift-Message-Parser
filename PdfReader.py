@@ -187,7 +187,7 @@ def send_new_message():
                 for transaction in transactions:
                     file_name = generate_html(transaction, file.strip('.pdf') +f'_{transaction['header']['message_id']}.pdf')
                     print(file_name)
-                new_files.append(file_name)
+                    new_files.append(file_name)
             else:
                 pass
     if len(new_files) > 0:
