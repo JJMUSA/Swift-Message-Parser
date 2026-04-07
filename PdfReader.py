@@ -93,7 +93,7 @@ def get_readable_summary(pdf_path):
 
             acc_number_match = re.search(r'<CdtrAcct[^>]*>(.*)</CdtrAcct>', block, re.IGNORECASE)
             acc_number = find_tag_content('Id', acc_number_match.group(1)) if acc_number_match else None
-
+            print(acc_number)
 
             # Account Info
             iban = find_tag_content('IBAN', block)
@@ -176,7 +176,7 @@ def generate_html(mx_data, file):
 def send_new_message():
     inputfiles = os.listdir(input_path)
     outputfiles = os.listdir("./Outputfiles")
-    outputfiles = [outputfile.rstrip('_') for outputfile in outputfiles]
+    outputfiles = [outputfile.rsplit('_', 1)[0]+'.pdf' if outputfile.count('_')>1 else outputfile for outputfile in outputfiles]
     missing_files = set(inputfiles) - set(outputfiles)
     # print(missing_files)
     new_files = []
@@ -185,8 +185,8 @@ def send_new_message():
             if identify_swift_type(f"{input_path}/{file}") == "MX":
                 transactions = get_readable_summary(f"{input_path}/{file}")
                 for transaction in transactions:
-                    file_name = generate_html(transaction, file.strip('.pdf') +f'_{transaction['header']['message_id']}.pdf')
-                    print(file_name)
+                    file_name = generate_html(transaction, file.strip('.pdf') +f"_{transaction['header']['message_id']}.pdf")
+                    
                     new_files.append(file_name)
             else:
                 pass
@@ -196,6 +196,15 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
+            'acamara@bidc-ebid.org',
+            'alawal@bidc-ebid.org',
+            'ATALL@bidc-ebid.org',
+            'EKOFFI@bidc-ebid.org',
+            'jatchatin@bidc-ebid',
+            'LGNANSOUNOU@bidc-ebid.org',
+            'lhoueton@bidc-ebid.org',
+            'PTAKOUGNADI@bidc-ebid.org',
+            'SVANDERPUYE@bidc-ebid.org'
             'EOMIJIE@bidc-ebid.org',
             'aouattara@bidc-ebid.org',
             'YDETE@bidc-ebid.org',

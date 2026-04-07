@@ -58,6 +58,10 @@
             display: inline-block;
             margin: 0 auto;
         }
+        .amount-col { width: 28%; border-right: 1pt solid #f1f5f9; padding-right: 15pt; }
+        .ordering-col { width: 36%; padding: 0 15pt; border-right: 1pt solid #f1f5f9; }
+        .beneficiary-col { width: 36%; padding-left: 15pt; }
+
         .logo-placeholder {
             width: 65pt;
             height: 65pt;
@@ -133,6 +137,11 @@
             font-weight: 600;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            /* Sustainable wrapping fix */
+            /*word-wrap: break-word;*/
+            /*overflow-wrap: break-word;*/
+            display: block;
+            line-height: 1.3;
         }
 
         .value-mono {
@@ -192,6 +201,44 @@
             word-break: break-all;
         }
 
+        /* New Card Footer for Centralized IBAN */
+        .card-footer {
+            background-color: #fcfdfe;
+            border-top: 1pt solid #f1f5f9;
+            padding: 10pt 18pt;
+            text-align: center;
+        }
+
+        .iban-container-central {
+            display: inline-block;
+            background-color: #f1f5f9;
+            padding: 5pt 12pt;
+            border-radius: 20pt;
+            border: 1pt solid #e2e8f0;
+        }
+
+        .iban-label {
+            background-color: var(--ebid-green);
+            color: white;
+            font-size: 6pt;
+            padding: 2pt 5pt;
+            border-radius: 3pt;
+            font-weight: 800;
+            margin-right: 8pt;
+            vertical-align: middle;
+            text-transform: uppercase;
+        }
+
+        .iban-text {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            color: var(--slate-text);
+            letter-spacing: 0.5pt;
+            word-break: break-all;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+
         .iban-box {
             background-color: #f1f5f9;
             padding: 8pt 12pt;
@@ -202,26 +249,26 @@
             border-left: 3pt solid var(--ebid-green);
         }
 
-        .iban-label {
-            background-color: var(--ebid-green);
-            color: white;
-            font-size: 6.5pt;
-            padding: 2pt 5pt;
-            border-radius: 3pt;
-            font-weight: 800;
-            margin-right: 8pt;
-            vertical-align: middle;
-            text-transform: uppercase;
-        }
-        .iban-text {
-            font-family: 'Courier New', monospace;
-            font-size: 10pt;
-            color: var(--slate-text);
-            letter-spacing: 0.5pt;
-            word-break: break-all;
-            font-weight: 600;
-            vertical-align: middle;
-        }
+        /*.iban-label {*/
+        /*    background-color: var(--ebid-green);*/
+        /*    color: white;*/
+        /*    font-size: 6.5pt;*/
+        /*    padding: 2pt 5pt;*/
+        /*    border-radius: 3pt;*/
+        /*    font-weight: 800;*/
+        /*    margin-right: 8pt;*/
+        /*    vertical-align: middle;*/
+        /*    text-transform: uppercase;*/
+        /*}*/
+        /*.iban-text {*/
+        /*    font-family: 'Courier New', monospace;*/
+        /*    font-size: 8pt;*/
+        /*    color: var(--slate-text);*/
+        /*    letter-spacing: 0.5pt;*/
+        /*    word-break: break-all;*/
+        /*    font-weight: 600;*/
+        /*    vertical-align: middle;*/
+        /*}*/
     </style>
 </head>
 <body>
@@ -258,8 +305,8 @@
         <div class="transaction-card">
             <div class="card-header">
                 <div class="grid">
-                    <div class="grid-col" style="width: 30%;">Ref #{{ loop.index }}</div>
-                    <div class="grid-col" style="width: 70%; text-align: right; color: var(--slate-label);">UETR: <span style="font-family: monospace;">{{ tx.UETR | default('N/A') }}</span></div>
+                    <div class="grid-col" style="width: 40%;">Ref #{{ loop.index }}</div>
+                    <div class="grid-col" style="width: 60%; text-align: right; color: var(--slate-label);">UETR: <span style="font-family: monospace;">{{ tx.UETR | default('N/A') }}</span></div>
                 </div>
             </div>
             <div class="card-body">
@@ -293,13 +340,14 @@
                             <div class="label">Receiving Institution</div>
                             <div class="value" style="font-size: 8.5pt;">{{ tx.FINInstnId | default('N/A') }}</div>
                         </div>
-
-                        <div class="iban-box">
-                            <span class="iban-label">Beneficiary Account Number:</span>
-                            <span class="iban-text">{{ tx.IBAN | default('N/A') }}</span>
-                        </div>
                     </div>
                 </div>
+                  <div class="card-footer">
+                        <div class="iban-container-central">
+                            <span class="iban-label">Receiver's Account Number</span>
+                            <span class="iban-text">{{ tx.IBAN | default('N/A') }}</span>
+                        </div>
+                  </div>
             </div>
         </div>
         {% endfor %}
