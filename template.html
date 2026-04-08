@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>EBID - SWIFT MX Transfer Advice</title>
     <style>
-        /* Professional Gothic Font Stack for WeasyPrint compatibility */
         @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap');
 
         :root {
@@ -39,40 +38,10 @@
             margin-bottom: 30pt;
         }
         .header img {
-           height: 80pt; /* Adjusted for prominent centered presence */
+            height: 80pt;
             width: auto;
             display: inline-block;
             margin: 0 auto;
-            /*top:0;*/
-            /*left:0;*/
-/*<!--            margin-top: 0;-->*/
-/*<!--            text-align:left-->*/
-        }
-        .header logo-img {
-            /*height: 100pt; !* Fixed height for consistency *!*/
-            /*width: auto;  !* Proportional width *!*/
-            /*display: block;*/
-            /*margin: 0 auto;*/
-            height: 80pt; /* Adjusted for prominent centered presence */
-            width: auto;
-            display: inline-block;
-            margin: 0 auto;
-        }
-        .amount-col { width: 28%; border-right: 1pt solid #f1f5f9; padding-right: 15pt; }
-        .ordering-col { width: 36%; padding: 0 15pt; border-right: 1pt solid #f1f5f9; }
-        .beneficiary-col { width: 36%; padding-left: 15pt; }
-
-        .logo-placeholder {
-            width: 65pt;
-            height: 65pt;
-            border-radius: 50%;
-            border: 2pt solid var(--ebid-green);
-            margin: 0 auto 12pt;
-            display: block;
-            line-height: 65pt;
-            font-weight: bold;
-            color: var(--ebid-green);
-            font-size: 14pt;
         }
 
         .title {
@@ -91,7 +60,6 @@
             font-weight: 500;
         }
 
-        /* Metadata Section */
         .section-header {
             color: var(--ebid-maroon);
             font-size: 9pt;
@@ -112,12 +80,12 @@
             margin-bottom: 25pt;
         }
 
+        /* Meta grid — display:table is fine here, no long overflow-prone strings */
         .grid {
             display: table;
             width: 100%;
-            table-layout: fixed; /* Ensures rigid column widths */
+            table-layout: fixed;
         }
-
         .grid-col {
             display: table-cell;
             vertical-align: top;
@@ -137,9 +105,8 @@
             font-weight: 600;
             word-wrap: break-word;
             overflow-wrap: break-word;
-            /* Sustainable wrapping fix */
-            /*word-wrap: break-word;*/
-            /*overflow-wrap: break-word;*/
+            word-break: break-word;
+            white-space: normal;
             display: block;
             line-height: 1.3;
         }
@@ -148,7 +115,7 @@
             font-family: 'Courier New', monospace;
             color: var(--ebid-green);
             font-size: 11pt;
-            word-break: break-all; /* Critical for long ID strings */
+            word-break: break-all;
         }
 
         /* Transaction Cards */
@@ -175,10 +142,38 @@
             padding: 15pt;
         }
 
-        /* Proportional Layout */
-        .amount-col { width: 30%; border-right: 1pt solid #f1f5f9; padding-right: 15pt; }
-        .ordering-col { width: 35%; padding: 0 15pt; border-right: 1pt solid #f1f5f9; }
-        .beneficiary-col { width: 35%; padding-left: 15pt; }
+        /* Real <table> for transaction columns — WeasyPrint enforces widths strictly */
+        .tx-table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        .tx-table td {
+            vertical-align: top;
+            overflow: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .col-amount {
+            width: 30%;
+            border-right: 1pt solid #f1f5f9;
+            padding-right: 15pt;
+        }
+
+        .col-ordering {
+            width: 35%;
+            padding: 0 15pt;
+            border-right: 1pt solid #f1f5f9;
+        }
+
+        .col-beneficiary {
+            width: 35%;
+            padding-left: 15pt;
+        }
 
         .amount-text {
             font-size: 20pt;
@@ -201,7 +196,6 @@
             word-break: break-all;
         }
 
-        /* New Card Footer for Centralized IBAN */
         .card-footer {
             background-color: #fcfdfe;
             border-top: 1pt solid #f1f5f9;
@@ -238,44 +232,12 @@
             font-weight: 600;
             vertical-align: middle;
         }
-
-        .iban-box {
-            background-color: #f1f5f9;
-            padding: 8pt 12pt;
-            border-radius: 6pt;
-            margin-top: 12pt;
-            display: block;
-            width: auto; /* Respects column padding */
-            border-left: 3pt solid var(--ebid-green);
-        }
-
-        /*.iban-label {*/
-        /*    background-color: var(--ebid-green);*/
-        /*    color: white;*/
-        /*    font-size: 6.5pt;*/
-        /*    padding: 2pt 5pt;*/
-        /*    border-radius: 3pt;*/
-        /*    font-weight: 800;*/
-        /*    margin-right: 8pt;*/
-        /*    vertical-align: middle;*/
-        /*    text-transform: uppercase;*/
-        /*}*/
-        /*.iban-text {*/
-        /*    font-family: 'Courier New', monospace;*/
-        /*    font-size: 8pt;*/
-        /*    color: var(--slate-text);*/
-        /*    letter-spacing: 0.5pt;*/
-        /*    word-break: break-all;*/
-        /*    font-weight: 600;*/
-        /*    vertical-align: middle;*/
-        /*}*/
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <img src="./static/images/Badge.png" alt="Organization Logo">
-<!--            <div class="logo-placeholder">EBID</div>-->
             <h1 class="title">Transfer Advice Summary</h1>
             <p class="gen-date">Report Generated: {{ GenerationDate }}</p>
         </div>
@@ -287,16 +249,15 @@
                     <div class="label">MsgId Reference</div>
                     <div class="value-mono">{{ MessageID }}</div>
                 </div>
-
                 <div class="grid-col" style="width: 40%; text-align: right;">
                     <div class="label">Creation Timestamp</div>
-                    <div class="gen-date">{{ CreationTimestamp}}</div>
+                    <div class="gen-date">{{ CreationTimestamp }}</div>
                 </div>
             </div>
-             <div class="grid-col" style="width: 40%;">
-                    <div class="label">Message Input Reference</div>
-                    <div class="value-mono">{{ MessageRef }}</div>
-             </div>
+            <div style="margin-top: 10pt;">
+                <div class="label">Message Input Reference</div>
+                <div class="value-mono">{{ MessageRef }}</div>
+            </div>
         </div>
 
         <div class="section-header">Processed Transactions</div>
@@ -310,44 +271,40 @@
                 </div>
             </div>
             <div class="card-body">
-                <div class="grid">
-                    <!-- Amount Section -->
-                    <div class="grid-col amount-col">
-                        <div class="label">Settlement Amount</div>
-                        <div style="margin-top: 5pt;">
-                            <span class="amount-text">{{ "{:,.2f}".format(tx.Amount | float) }}</span>
-                            <span class="currency-text">{{ tx.Currency }}</span>
-                        </div>
-                    </div>
-
-                    <!-- Ordering Party -->
-                    <div class="grid-col ordering-col">
-                        <div class="label">Ordering Party (Debtor)</div>
-                        <div class="value">{{ tx.SenderName | default('N/A') }}</div>
-
-                        <div style="margin-top: 10pt;">
-                            <div class="label">Sender Reference</div>
-                            <div class="reference-subtext">{{ tx.Reference | default('N/A') }}</div>
-                        </div>
-                    </div>
-
-                    <!-- Beneficiary -->
-                    <div class="grid-col beneficiary-col">
-                        <div class="label">Beneficiary (Creditor)</div>
-                        <div class="value">{{ tx.ReceiverName | default('N/A') }}</div>
-
-                        <div style="margin-top: 10pt;">
-                            <div class="label">Receiving Institution</div>
-                            <div class="value" style="font-size: 8.5pt;">{{ tx.FINInstnId | default('N/A') }}</div>
-                        </div>
+                <!-- Native <table> so WeasyPrint strictly respects column widths -->
+                <table class="tx-table">
+                    <tr>
+                        <td class="col-amount">
+                            <div class="label">Settlement Amount</div>
+                            <div style="margin-top: 5pt;">
+                                <span class="amount-text">{{ "{:,.2f}".format(tx.Amount | float) }}</span>
+                                <span class="currency-text">{{ tx.Currency }}</span>
+                            </div>
+                        </td>
+                        <td class="col-ordering">
+                            <div class="label">Ordering Party (Debtor)</div>
+                            <div class="value">{{ tx.SenderName | default('N/A') }}</div>
+                            <div style="margin-top: 10pt;">
+                                <div class="label">Sender Reference</div>
+                                <div class="reference-subtext">{{ tx.Reference | default('N/A') }}</div>
+                            </div>
+                        </td>
+                        <td class="col-beneficiary">
+                            <div class="label">Beneficiary (Creditor)</div>
+                            <div class="value">{{ tx.ReceiverName | default('N/A') }}</div>
+                            <div style="margin-top: 10pt;">
+                                <div class="label">Receiving Institution</div>
+                                <div class="value" style="font-size: 8pt; hyphens: auto;">{{ tx.FINInstnId | default('N/A') }}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="card-footer">
+                    <div class="iban-container-central">
+                        <span class="iban-label">Receiver's Account Number</span>
+                        <span class="iban-text">{{ tx.IBAN | default('N/A') }}</span>
                     </div>
                 </div>
-                  <div class="card-footer">
-                        <div class="iban-container-central">
-                            <span class="iban-label">Receiver's Account Number</span>
-                            <span class="iban-text">{{ tx.IBAN | default('N/A') }}</span>
-                        </div>
-                  </div>
             </div>
         </div>
         {% endfor %}

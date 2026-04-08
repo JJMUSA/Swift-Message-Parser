@@ -93,7 +93,7 @@ def get_readable_summary(pdf_path):
 
             acc_number_match = re.search(r'<CdtrAcct[^>]*>(.*)</CdtrAcct>', block, re.IGNORECASE)
             acc_number = find_tag_content('Id', acc_number_match.group(1)) if acc_number_match else None
-            print(acc_number)
+            acc_number.replace(' ', '')
 
             # Account Info
             iban = find_tag_content('IBAN', block)
@@ -239,3 +239,4 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
 
+send_new_message()
