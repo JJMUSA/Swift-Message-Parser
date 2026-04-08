@@ -61,7 +61,7 @@ def get_readable_summary(pdf_path):
         extracted_data["header"] = {
             "message_id": msg_id,
             "messageRef": message_ref,
-            "creation_date": datetime.fromisoformat(creation_date).strftime(("%d %b %Y, %I:%M %p"))
+            "creation_date": datetime.fromisoformat(creation_date).strftime(("%d %b %Y, %I:%M %p")) if creation_date else None
         }
         # print(extracted_data)
         # 4. Identify Transaction Blocks
@@ -204,7 +204,7 @@ def send_new_message():
             'LGNANSOUNOU@bidc-ebid.org',
             'lhoueton@bidc-ebid.org',
             'PTAKOUGNADI@bidc-ebid.org',
-            'SVANDERPUYE@bidc-ebid.org'
+            'SVANDERPUYE@bidc-ebid.org',
             'EOMIJIE@bidc-ebid.org',
             'aouattara@bidc-ebid.org',
             'YDETE@bidc-ebid.org',
@@ -227,7 +227,7 @@ def send_new_message():
 
         )
 
-
+send_new_message()
 if __name__ == "__main__":
     scheduler = BackgroundScheduler()
     scheduler.add_job(send_new_message, 'interval', minutes=5)
@@ -239,4 +239,4 @@ if __name__ == "__main__":
     except (KeyboardInterrupt, SystemExit):
         scheduler.shutdown()
 
-send_new_message()
+
