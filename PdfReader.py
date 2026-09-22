@@ -12,8 +12,8 @@ import sqlite3
 from werkzeug.wrappers import request
 
 env = Environment(loader=FileSystemLoader('.'))
-# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-input_path = "./Inputfiles"
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+# input_path = "./Inputfiles"
 
 
 
@@ -191,7 +191,7 @@ def send_new_message():
                    outputfiles]
     missing_files = list(set(inputfiles) - set(outputfiles))
     missing_files = [f for f in missing_files if f.lower().endswith('.pdf')]
-    
+
     # print(missing_files)
     new_files = []
     for file in missing_files:
