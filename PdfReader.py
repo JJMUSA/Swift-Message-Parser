@@ -8,11 +8,15 @@ from mail import send_email
 from bs4 import BeautifulSoup
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
+import sqlite3
 from werkzeug.wrappers import request
 
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-# input_path = "./Inputfiles"
+# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+input_path = "./Inputfiles"
+
+
+
 def get_readable_summary(pdf_path):
     doc = fitz.open(pdf_path)
     doc_transactions = []
@@ -74,7 +78,8 @@ def get_readable_summary(pdf_path):
             ccy = find_attribute('IntrBkSttlmAmt', 'Ccy', block)
             dt = find_tag_content('IntrBkSttlmDt', block)
             ref = find_tag_content('RmtInf', block)
-
+            inter_medairy =  find_tag_content('FinInstnId', block)
+            print(inter_medairy)
 
 
             # Sender (Debtor) - Look for Nm inside Dbtr block
@@ -88,8 +93,8 @@ def get_readable_summary(pdf_path):
             bic_match = find_tag_content('FinInstnId', cdtr_match.group())
             bic =  find_tag_content('BICFI', bic_match) if bic_match else None
 
-            status, data = get_bic(bic)
-            bic = data['institutionName'] if status==200 else bic
+
+            bic = get_bic(bic)
 
             acc_number_match = re.search(r'<CdtrAcct[^>]*>(.*)</CdtrAcct>', block, re.IGNORECASE)
             acc_number = find_tag_content('Id', acc_number_match.group(1)) if acc_number_match else None
@@ -116,10 +121,15 @@ def get_readable_summary(pdf_path):
 
 
 def get_bic(bic):
-    endpoint =  f"http://10.10.130.11:3000/api/bidc_ir/bic-code/{bic}"
-    response =  requests.get(endpoint)
-    status = response.status_code
-    return status, response.json()
+    db_con = sqlite3.connect('BIC DB')
+    cursor = db_con.cursor()
+    query_string = "SELECT [INSTITUTION NAME] FROM BIC WHERE [BIC CODE]='{}'"
+
+    cursor.execute(query_string.format(bic))
+    result= cursor.fetchone()
+    institution_name = result[0] if result is not None else bic
+    db_con.close()
+    return institution_name
 
 
 def identify_swift_type(pdf_path):
@@ -176,8 +186,12 @@ def generate_html(mx_data, file):
 def send_new_message():
     inputfiles = os.listdir(input_path)
     outputfiles = os.listdir("./Outputfiles")
-    outputfiles = [outputfile.rsplit('_', 1)[0]+'.pdf' if outputfile.count('_')>1 else outputfile for outputfile in outputfiles]
-    missing_files = set(inputfiles) - set(outputfiles)
+
+    outputfiles = [outputfile.rsplit('_', 1)[0] + '.pdf' if outputfile.count('_') > 1 else outputfile for outputfile in
+                   outputfiles]
+    missing_files = list(set(inputfiles) - set(outputfiles))
+    missing_files = [f for f in missing_files if f.lower().endswith('.pdf')]
+    
     # print(missing_files)
     new_files = []
     for file in missing_files:
@@ -196,20 +210,20 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
-            'acamara@bidc-ebid.org',
-            'alawal@bidc-ebid.org',
-            'ATALL@bidc-ebid.org',
-            'EKOFFI@bidc-ebid.org',
-            'jatchatin@bidc-ebid',
-            'LGNANSOUNOU@bidc-ebid.org',
-            'lhoueton@bidc-ebid.org',
-            'PTAKOUGNADI@bidc-ebid.org',
-            'SVANDERPUYE@bidc-ebid.org',
-            'EOMIJIE@bidc-ebid.org',
-            'aouattara@bidc-ebid.org',
-            'YDETE@bidc-ebid.org',
-            'AAMANKWAH@bidc-ebid.org',
-            'forimoloye@bidc-ebid.org'
+            # 'acamara@bidc-ebid.org',
+            # 'alawal@bidc-ebid.org',
+            # 'ATALL@bidc-ebid.org',
+            # 'EKOFFI@bidc-ebid.org',
+            # 'jatchatin@bidc-ebid.org',
+            # 'LGNANSOUNOU@bidc-ebid.org',
+            # 'lhoueton@bidc-ebid.org',
+            # 'PTAKOUGNADI@bidc-ebid.org',
+            # 'SVANDERPUYE@bidc-ebid.org',
+            # 'EOMIJIE@bidc-ebid.org',
+            # 'aouattara@bidc-ebid.org',
+            # 'YDETE@bidc-ebid.org',
+            # 'AAMANKWAH@bidc-ebid.org',
+            # 'forimoloye@bidc-ebid.org'
         ],
             cc=[],
             subject="New LTA Message Received",
@@ -225,6 +239,8 @@ def send_new_message():
                 "./static/images/image013.jpg",
             ],
 
+
+
         )
 
 send_new_message()
@@ -233,7 +249,7 @@ if __name__ == "__main__":
     scheduler.add_job(send_new_message, 'interval', minutes=5)
     scheduler.start()
 
-    try:
+    try:    
         while True:
             pass
     except (KeyboardInterrupt, SystemExit):
