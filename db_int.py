@@ -4,9 +4,7 @@ import sqlite3
 conn =  sqlite3.connect('BIC DB')
 cursor = conn.cursor()
 
-file = 'C:/Users/DTIOM/\
-OneDrive - ECOWAS Bank for Investment and Development (EBID)/\
-Work/2026/IT Projects/CBS Swift Inward/BICDIR2018_V1_FULL_20231229.txt'
+file = './CBS Swift Inward/BICDIR2018_V1_FULL_20231229.txt'
 df = pd.read_csv(file, sep='\t', header=0)
 df.to_sql('BIC', con=conn, if_exists='replace', index=False)
 # conn.commit()
