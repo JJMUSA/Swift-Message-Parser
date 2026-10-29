@@ -16,7 +16,7 @@ RUN powershell -Command \
     Set-ExecutionPolicy Bypass -Scope Process -Force; \
     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; \
     Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org')); \
-    choco install gtk-runtime -y --no-progress \
+    choco install gtk-runtime -y --no-progress
 
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
