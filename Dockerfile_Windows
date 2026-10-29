@@ -1,6 +1,6 @@
 FROM python:3.11-windowsservercore-1809
 
-ENV HOME=C:\home\app
+ENV HOME=C:/home/app
 #RUN mkdir $HOME
 WORKDIR $HOME
 COPY BICDIR2018_V1_FULL_20231229.txt \
