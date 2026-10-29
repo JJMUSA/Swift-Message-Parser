@@ -4,11 +4,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.application import MIMEApplication
 from email.mime.image import MIMEImage
+
 from dotenv import load_dotenv
 
 load_dotenv()
 
-
+output_path = "/app/outputfiles"
 def send_email(subject, body, recipients, attachments=None, inline_images=None,
                cc=None,):
     password = env.get("OUTLOOK_HOST_PASSWORD")
@@ -21,7 +22,7 @@ def send_email(subject, body, recipients, attachments=None, inline_images=None,
     msg.attach(MIMEText(body, 'html'))
     if attachments:
         for attachment in attachments:
-            with open(f'./Outputfiles/{attachment}', "rb") as f:
+            with open(f'{output_path}/{attachment}', "rb") as f:
                 part = MIMEApplication(f.read(), Name=attachment)
             part['Content-Disposition'] = f'attachment; filename="{attachment}"'
             msg.attach(part)
@@ -29,9 +30,9 @@ def send_email(subject, body, recipients, attachments=None, inline_images=None,
         add_images(msg, inline_images)
     smtp_server = smtplib.SMTP(env.get("OUTLOOK_HOST"), timeout=125)
     smtp_server.set_debuglevel(0)
-    smtp_server.starttls()
     smtp_server.connect(port=env.get("OUTLOOK_PORT"), host=env.get("OUTLOOK_HOST"))
     smtp_server.starttls()
+    # smtp_server.starttls()
     smtp_server.set_debuglevel(1)
     smtp_server.login(user, password)
     smtp_server.sendmail(user, recipients+cc, msg.as_string())

@@ -9,12 +9,13 @@ from bs4 import BeautifulSoup
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 import sqlite3
+import db_init
 from werkzeug.wrappers import request
 
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-# input_path = "./Inputfiles"
-
+# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+input_path = "/app/inputfiles"
+output_path = "/app/outputfiles"
 
 
 def get_readable_summary(pdf_path):
@@ -178,14 +179,14 @@ def generate_html(mx_data, file):
                'GenerationDate': datetime.now().strftime(("%d %b %Y, %I:%M %p"))}
 
     html = template.render(context)
-    HTML(string=html, base_url= '.').write_pdf(f"./Outputfiles/{file}")
+    HTML(string=html, base_url= '.').write_pdf(f"{output_path}/{file}")
     return file
     # template.render(context)
 
 
 def send_new_message():
     inputfiles = os.listdir(input_path)
-    outputfiles = os.listdir("./Outputfiles")
+    outputfiles = os.listdir(f"{output_path}")
 
     outputfiles = [outputfile.rsplit('_', 1)[0] + '.pdf' if outputfile.count('_') > 1 else outputfile for outputfile in
                    outputfiles]
@@ -210,20 +211,20 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
-            'acamara@bidc-ebid.org',
-            'alawal@bidc-ebid.org',
-            'ATALL@bidc-ebid.org',
-            'EKOFFI@bidc-ebid.org',
-            'jatchatin@bidc-ebid.org',
-            'LGNANSOUNOU@bidc-ebid.org',
-            'lhoueton@bidc-ebid.org',
-            'PTAKOUGNADI@bidc-ebid.org',
-            'SVANDERPUYE@bidc-ebid.org',
-            'EOMIJIE@bidc-ebid.org',
-            'aouattara@bidc-ebid.org',
-            'YDETE@bidc-ebid.org',
-            'AAMANKWAH@bidc-ebid.org',
-            'forimoloye@bidc-ebid.org'
+            # 'acamara@bidc-ebid.org',
+            # 'alawal@bidc-ebid.org',
+            # 'ATALL@bidc-ebid.org',
+            # 'EKOFFI@bidc-ebid.org',
+            # 'jatchatin@bidc-ebid.org',
+            # 'LGNANSOUNOU@bidc-ebid.org',
+            # 'lhoueton@bidc-ebid.org',
+            # 'PTAKOUGNADI@bidc-ebid.org',
+            # 'SVANDERPUYE@bidc-ebid.org',
+            # 'EOMIJIE@bidc-ebid.org',
+            # 'aouattara@bidc-ebid.org',
+            # 'YDETE@bidc-ebid.org',
+            # 'AAMANKWAH@bidc-ebid.org',
+            # 'forimoloye@bidc-ebid.org'
         ],
             cc=[],
             subject="New LTA Message Received",
