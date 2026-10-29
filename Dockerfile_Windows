@@ -10,7 +10,7 @@ COPY BICDIR2018_V1_FULL_20231229.txt \
      PdfReader.py \
      requirements.txt \
      template.html \
-     .env $HOME
+     .env $HOME/
 COPY static/ $HOME/static/
 RUN powershell -Command \
     Set-ExecutionPolicy Bypass -Scope Process -Force; \
