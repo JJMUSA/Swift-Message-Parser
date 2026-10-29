@@ -1,0 +1,24 @@
+FROM python:3.11-windowsservercore-1809
+
+ENV HOME=C:\home\app
+RUN mkdir $HOME
+WORKDIR $HOME
+COPY BICDIR2018_V1_FULL_20231229.txt \
+     db_init.py \
+     email_template.html\
+     mail.py \
+     PdfReader.py \
+     requirements.txt \
+     template.html \
+     .env $HOME
+COPY static/ $HOME/static/
+RUN powershell -Command \
+    Set-ExecutionPolicy Bypass -Scope Process -Force; \
+    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12; \
+    Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org')); \
+    choco install gtk-runtime -y --no-progress \
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+CMD ["python","PdfReader.py"]
