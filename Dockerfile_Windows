@@ -22,9 +22,9 @@ USER ContainerAdministrator
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
 # 1. Download and silently install Microsoft Visual C++ Redistributable
-RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; `
-    Invoke-WebRequest "https://aka.ms/vs/17/release/vc_redist.x64.exe" -OutFile "vc_redist.x64.exe"; `
-    Start-Process -FilePath "C:\vc_redist.x64.exe" -ArgumentList "/install", "/quiet", "/norestart" -Passthru | Wait-Process; `
+RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; \
+    Invoke-WebRequest "https://aka.ms/vs/17/release/vc_redist.x64.exe" -OutFile "vc_redist.x64.exe"; \
+    Start-Process -FilePath "C:\vc_redist.x64.exe" -ArgumentList "/install", "/quiet", "/norestart" -Passthru | Wait-Process; \
     Remove-Item -Force "vc_redist.x64.exe"
 
 RUN C:\Python\python.exe -m pip install --upgrade pip
