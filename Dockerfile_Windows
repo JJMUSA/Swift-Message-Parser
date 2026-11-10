@@ -43,9 +43,9 @@ RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/
 ENV PATH=C:\GTK\bin;C:\Python311;C:\Python311\Scripts;%PATH%
 
 #ENV WEASYPRINT_DLL_DIRECTORIES=C:\msys64\ucrt64\bin
-RUN C:\Python\python.exe -m pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN python -m pip install --upgrade pip
+RUN python -m pip install -r requirements.txt
 
-RUN python -c "from weasyprint import HTML; HTML(string='<h1>WeasyPrint Docker Test</h1>').write_pdf(r'C:\home\app\test.pdf')"
+
 
 CMD ["python","PdfReader.py"]
