@@ -40,7 +40,7 @@ ENV WEASYPRINT_DLL_DIRECTORIES=C:\GTK\bin
 # Download and extract GTK runtime
 RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/releases/download/2026.10.0/GTK4_Gvsbuild_2026.10.0_x64.zip' -OutFile 'C:\gtk.zip'; if (!(Test-Path 'C:\gtk.zip')) { throw 'GTK download failed' }; Expand-Archive -Path 'C:\gtk.zip' -DestinationPath 'C:\GTK' -Force; Remove-Item 'C:\gtk.zip' -Force
 
-ENV PATH=C:\GTK\bin;C:\Python311;C:\Python311\Scripts;%PATH%
+#ENV PATH=C:\GTK\bin;C:\Python311;C:\Python311\Scripts;%PATH%
 
 #ENV WEASYPRINT_DLL_DIRECTORIES=C:\msys64\ucrt64\bin
 RUN python -m pip install --upgrade pip
