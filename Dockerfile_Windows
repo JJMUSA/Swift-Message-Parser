@@ -31,22 +31,18 @@ ARG GTK_VERSION=2026.10.0
 ENV GTK_HOME=C:\GTK
 ENV WEASYPRINT_DLL_DIRECTORIES=C:\GTK\bin
 
+# GTK runtime version
 ARG GTK_VERSION=2026.10.0
 
 ENV GTK_HOME=C:\GTK
 ENV WEASYPRINT_DLL_DIRECTORIES=C:\GTK\bin
 
-
-RUN $version='2026.10.0'; $url="https://github.com/wingtk/gvsbuild/releases/download/$version/GTK4_Gvsbuild_${version}_x64.zip"; Invoke-WebRequest -UseBasicParsing -Uri $url -OutFile "$env:TEMP\gtk.zip"; if (!(Test-Path "$env:TEMP\gtk.zip")) { throw 'GTK download failed' }; Expand-Archive -Path "$env:TEMP\gtk.zip" -DestinationPath 'C:\GTK' -Force; Remove-Item "$env:TEMP\gtk.zip" -Force
-
+# Download and extract GTK runtime
+RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/releases/download/2026.10.0/GTK4_Gvsbuild_2026.10.0_x64.zip' -OutFile 'C:\gtk.zip'; if (!(Test-Path 'C:\gtk.zip')) { throw 'GTK download failed' }; Expand-Archive -Path 'C:\gtk.zip' -DestinationPath 'C:\GTK' -Force; Remove-Item 'C:\gtk.zip' -Force
 
 ENV PATH=C:\GTK\bin;C:\Python311;C:\Python311\Scripts;%PATH%
 
-
-RUN $required=@('libgobject-2.0-0.dll','libglib-2.0-0.dll','libpango-1.0-0.dll','libcairo-2.dll'); foreach ($dll in $required) { if (!(Test-Path "C:\GTK\bin\$dll")) { throw "Missing GTK dependency: $dll" } }
-
-
-ENV WEASYPRINT_DLL_DIRECTORIES=C:\msys64\ucrt64\bin
+#ENV WEASYPRINT_DLL_DIRECTORIES=C:\msys64\ucrt64\bin
 RUN C:\Python\python.exe -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
