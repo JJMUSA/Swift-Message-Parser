@@ -21,10 +21,22 @@ USER ContainerAdministrator
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 
-# 1. Download and silently install Microsoft Visual C++ Redistributable
-# Install Microsoft Visual C++ Redistributable
+
 RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $installer = Join-Path $env:TEMP 'vc_redist.x64.exe'; Invoke-WebRequest 'https://aka.ms/vs/17/release/vc_redist.x64.exe' -OutFile $installer; if (!(Test-Path $installer)) { throw 'VC++ installer download failed' }; $process = Start-Process -FilePath $installer -ArgumentList '/install', '/quiet', '/norestart' -Wait -PassThru; if ($process.ExitCode -ne 0 -and $process.ExitCode -ne 3010) { throw "VC++ installation failed with exit code $($process.ExitCode)" }; Remove-Item -Force $installer
 
+RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -UseBasicParsing -Uri "https://github.com/msys2/msys2-installer/releases/download/nightly-x86_64/msys2-base-x86_64-latest.sfx.exe" -OutFile "C:\msys2.exe"; & "C:\msys2.exe" -y -oC:\; if ($LASTEXITCODE -ne 0) { throw "MSYS2 installation failed" }; Remove-Item -Force "C:\msys2.exe"
+
+
+RUN $env:MSYSTEM = 'UCRT64'; & "C:\msys64\usr\bin\bash.exe" -lc ' '; if ($LASTEXITCODE -ne 0) { throw "MSYS2 initialization failed" }
+
+RUN $env:MSYSTEM = 'UCRT64'; & "C:\msys64\usr\bin\bash.exe" -lc 'pacman --noconfirm -Syuu'; if ($LASTEXITCODE -ne 0) { throw "MSYS2 core update failed" }
+
+RUN $env:MSYSTEM = 'UCRT64'; & "C:\msys64\usr\bin\bash.exe" -lc 'pacman --noconfirm -Syuu'; if ($LASTEXITCODE -ne 0) { throw "MSYS2 update failed" }
+
+RUN $env:MSYSTEM = 'UCRT64'; & "C:\msys64\usr\bin\bash.exe" -lc 'pacman --noconfirm -S --needed mingw-w64-ucrt-x86_64-pango'; if ($LASTEXITCODE -ne 0) { throw "Pango installation failed" }
+
+
+ENV WEASYPRINT_DLL_DIRECTORIES=C:\msys64\ucrt64\bin
 RUN C:\Python\python.exe -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
