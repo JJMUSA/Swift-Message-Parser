@@ -1,4 +1,4 @@
-FROM python:3.11-windowsservercore-1809
+FROM python:3.11-slim
 
 ENV HOME=/home/app
 RUN mkdir $HOME
