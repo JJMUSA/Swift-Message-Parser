@@ -23,8 +23,8 @@ RUN [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tl
 
 
 ARG GTK_VERSION=2026.10.0
-ENV GTK_HOME=C:\GTK
-ENV WEASYPRINT_DLL_DIRECTORIES=C:\GTK\bin
+ENV GTK_HOME=C:/GTK
+ENV WEASYPRINT_DLL_DIRECTORIES=C:/GTK/bin
 
 
 RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/releases/download/2026.10.0/GTK4_Gvsbuild_2026.10.0_x64.zip' -OutFile 'C:\gtk.zip'; if (!(Test-Path 'C:\gtk.zip')) { throw 'GTK download failed' }; Expand-Archive -Path 'C:\gtk.zip' -DestinationPath 'C:\GTK' -Force; Remove-Item 'C:\gtk.zip' -Force
