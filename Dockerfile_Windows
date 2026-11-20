@@ -29,10 +29,9 @@ ENV WEASYPRINT_DLL_DIRECTORIES=C:/GTK/bin
 
 RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/releases/download/2026.10.0/GTK4_Gvsbuild_2026.10.0_x64.zip' -OutFile 'C:\gtk.zip'; if (!(Test-Path 'C:\gtk.zip')) { throw 'GTK download failed' }; Expand-Archive -Path 'C:\gtk.zip' -DestinationPath 'C:\GTK' -Force; Remove-Item 'C:\gtk.zip' -Force
 #ENV PATH="C:\\GTK\\bin;${PATH}"
-RUN foreach ($n in 'gobject-2.0-0','pango-1.0-0','pangoft2-1.0-0','harfbuzz','fontconfig-1') { \
-      if (Test-Path "C:\GTK\bin\$n.dll") { Copy-Item "C:\GTK\bin\$n.dll" "C:\GTK\bin\lib$n.dll" } }
 
-RUN foreach ($p in @(@('harfbuzz','libharfbuzz-0'), @('pango-1.0-0','libpango-1.0-0'), @('pangoft2-1.0-0','libpangoft2-1.0-0'), @('fontconfig-1','libfontconfig-1'))) { $src = "C:\GTK\bin\$($p[0]).dll"; if (Test-Path $src) { Copy-Item $src "C:\GTK\bin\$($p[1]).dll" -Force } }
+
+
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
 
