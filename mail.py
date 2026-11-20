@@ -8,8 +8,8 @@ from email.mime.image import MIMEImage
 from dotenv import load_dotenv
 
 load_dotenv()
-
-output_path = "/app/outputfiles"
+output_path = "C:/Swift-Message-Parser/Outputfiles"
+# output_path = "/app/outputfiles"
 def send_email(subject, body, recipients, attachments=None, inline_images=None,
                cc=None,):
     password = env.get("OUTLOOK_HOST_PASSWORD")
