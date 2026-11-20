@@ -30,7 +30,10 @@ ENV WEASYPRINT_DLL_DIRECTORIES=C:/GTK/bin
 RUN Invoke-WebRequest -UseBasicParsing -Uri 'https://github.com/wingtk/gvsbuild/releases/download/2026.10.0/GTK4_Gvsbuild_2026.10.0_x64.zip' -OutFile 'C:\gtk.zip'; if (!(Test-Path 'C:\gtk.zip')) { throw 'GTK download failed' }; Expand-Archive -Path 'C:\gtk.zip' -DestinationPath 'C:\GTK' -Force; Remove-Item 'C:\gtk.zip' -Force
 #ENV PATH="C:\\GTK\\bin;${PATH}"
 
-
+RUN Copy-Item 'C:\GTK\bin\harfbuzz.dll' 'C:\GTK\bin\libharfbuzz-0.dll' -Force
+RUN Copy-Item 'C:\GTK\bin\pango-1.0-0.dll' 'C:\GTK\bin\libpango-1.0-0.dll' -Force
+RUN Copy-Item 'C:\GTK\bin\pangoft2-1.0-0.dll' 'C:\GTK\bin\libpangoft2-1.0-0.dll' -Force
+RUN Copy-Item 'C:\GTK\bin\fontconfig-1.dll' 'C:\GTK\bin\libfontconfig-1.dll' -Force
 
 RUN python -m pip install --upgrade pip
 RUN python -m pip install -r requirements.txt
