@@ -189,8 +189,8 @@ def generate_html(mx_data, file):
 
 
 def send_new_message():
-    inputfiles = [f for f in os.listdir(input_path) if os.path.getctime(f)>=datetime(2026,11,17).date()]
-    print(inputfiles)
+    inputfiles = os.listdir(input_path)
+    # print(inputfiles)
     outputfiles = os.listdir(f"{output_path}")
 
     outputfiles = [outputfile.rsplit('_', 1)[0] + '.pdf' if outputfile.count('_') > 1 else outputfile for outputfile in
