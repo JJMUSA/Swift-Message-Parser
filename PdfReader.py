@@ -16,7 +16,7 @@ import db_init
 from werkzeug.wrappers import request
 # smbclient.Clientconfigure(env.get())
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "//bidcforce-3-1/Dixio/SyncAppProd/folders/reception/LTA/Outgoing:/app/inputfiles"
+input_path = "//bidcforce-3-1/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 output_path = "C:/Swift-Message-Parser/Outputfiles"
 # input_path = "/app/inputfiles"
 # output_path = "/app/outputfiles"
