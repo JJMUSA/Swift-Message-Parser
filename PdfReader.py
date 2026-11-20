@@ -9,12 +9,12 @@ from bs4 import BeautifulSoup
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 import sqlite3
-import smbclient
+# import smbclient
 # from dotenv import load_dotenv
 # load_dotenv
 import db_init
 from werkzeug.wrappers import request
-smbclient.Clientconfigure(env.get())
+# smbclient.Clientconfigure(env.get())
 env = Environment(loader=FileSystemLoader('.'))
 input_path = "//bidcforce-3-1/Dixio/SyncAppProd/folders/reception/LTA/Outgoing:/app/inputfiles"
 output_path = "C:/Swift-Message-Parser/Outputfiles"
