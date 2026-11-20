@@ -9,13 +9,17 @@ from bs4 import BeautifulSoup
 import os
 from apscheduler.schedulers.background import BackgroundScheduler
 import sqlite3
+import smbclient
+# from dotenv import load_dotenv
+# load_dotenv
 import db_init
 from werkzeug.wrappers import request
-
+smbclient.Clientconfigure(env.get())
 env = Environment(loader=FileSystemLoader('.'))
-# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-input_path = "/app/inputfiles"
-output_path = "/app/outputfiles"
+input_path = "//bidcforce-3-1/Dixio/SyncAppProd/folders/reception/LTA/Outgoing:/app/inputfiles"
+output_path = "C:/Swift-Message-Parser/Outputfiles"
+# input_path = "/app/inputfiles"
+# output_path = "/app/outputfiles"
 
 
 def get_readable_summary(pdf_path):
@@ -185,7 +189,8 @@ def generate_html(mx_data, file):
 
 
 def send_new_message():
-    inputfiles = os.listdir(input_path)
+    inputfiles = [f for f in os.listdir(input_path) if os.path.getctime(f)>=datetime(2026,11,17).date()]
+    print(inputfiles)
     outputfiles = os.listdir(f"{output_path}")
 
     outputfiles = [outputfile.rsplit('_', 1)[0] + '.pdf' if outputfile.count('_') > 1 else outputfile for outputfile in
