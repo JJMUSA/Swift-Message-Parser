@@ -16,10 +16,10 @@ import db_init
 from werkzeug.wrappers import request
 # smbclient.Clientconfigure(env.get())
 env = Environment(loader=FileSystemLoader('.'))
-# input_path = "//bidcforce-3-1/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-# output_path = "C:/Swift-Message-Parser/Outputfiles"
-input_path = "C:/home/app/inputfiles"
-output_path = "C:/home/app/outputfiles"
+input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+output_path = "C:/Swift-Message-Parser/Outputfiles"
+# input_path = "C:/home/app/inputfiles"
+# output_path = "C:/home/app/outputfiles"
 
 
 def get_readable_summary(pdf_path):
