@@ -18,8 +18,8 @@ from werkzeug.wrappers import request
 env = Environment(loader=FileSystemLoader('.'))
 # input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
 # output_path = "C:/Swift-Message-Parser/Outputfiles"
-input_path = "/app/inputfiles"
-output_path = "/app/outputfiles"
+input_path = "/inputfiles"
+output_path = "/outputfiles"
 
 
 def get_readable_summary(pdf_path):
