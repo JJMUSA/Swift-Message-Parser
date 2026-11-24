@@ -16,10 +16,10 @@ import db_init
 from werkzeug.wrappers import request
 # smbclient.Clientconfigure(env.get())
 env = Environment(loader=FileSystemLoader('.'))
-input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
-output_path = "C:/Swift-Message-Parser/Outputfiles"
-# input_path = "C:/home/app/inputfiles"
-# output_path = "C:/home/app/outputfiles"
+# input_path = "C:/Dixio/SyncAppProd/folders/reception/LTA/Outgoing"
+# output_path = "C:/Swift-Message-Parser/Outputfiles"
+input_path = "/app/inputfiles"
+output_path = "/app/outputfiles"
 
 
 def get_readable_summary(pdf_path):
@@ -216,20 +216,20 @@ def send_new_message():
             email_html = f.read()
         send_email(recipients=[
             'jmusa@bidc-ebid.org',
-            'acamara@bidc-ebid.org',
-            'alawal@bidc-ebid.org',
-            'ATALL@bidc-ebid.org',
-            'EKOFFI@bidc-ebid.org',
-            'jatchatin@bidc-ebid.org',
-            'LGNANSOUNOU@bidc-ebid.org',
-            'lhoueton@bidc-ebid.org',
-            'PTAKOUGNADI@bidc-ebid.org',
-            'SVANDERPUYE@bidc-ebid.org',
-            'EOMIJIE@bidc-ebid.org',
-            'aouattara@bidc-ebid.org',
-            'YDETE@bidc-ebid.org',
-            'AAMANKWAH@bidc-ebid.org',
-            'forimoloye@bidc-ebid.org'
+            # 'acamara@bidc-ebid.org',
+            # 'alawal@bidc-ebid.org',
+            # 'ATALL@bidc-ebid.org',
+            # 'EKOFFI@bidc-ebid.org',
+            # 'jatchatin@bidc-ebid.org',
+            # 'LGNANSOUNOU@bidc-ebid.org',
+            # 'lhoueton@bidc-ebid.org',
+            # 'PTAKOUGNADI@bidc-ebid.org',
+            # 'SVANDERPUYE@bidc-ebid.org',
+            # 'EOMIJIE@bidc-ebid.org',
+            # 'aouattara@bidc-ebid.org',
+            # 'YDETE@bidc-ebid.org',
+            # 'AAMANKWAH@bidc-ebid.org',
+            # 'forimoloye@bidc-ebid.org'
         ],
             cc=[],
             subject="New LTA Message Received",
